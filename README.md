@@ -1,73 +1,124 @@
-# React + TypeScript + Vite
+# AI Tenant Rights Access Tool
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An AI-powered chatbot that helps California tenants understand their housing rights in plain, non-technical language. This tool aims to bridge the information gap between complex housing laws and the people who need to understand them.
 
-Currently, two official plugins are available:
+## 🎯 Project Goals
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Many tenants don't know their rights regarding:
+- Eviction procedures and notice requirements
+- Unsafe living conditions and repair responsibilities  
+- Security deposits and refunds
+- Discrimination and fair housing
+- Rent increases and lease terms
 
-## React Compiler
+This chatbot uses AI and retrieval-augmented generation (RAG) to answer these questions using official California legal resources.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🏗️ Architecture
 
-## Expanding the ESLint configuration
+- **Frontend**: React + TypeScript (Vite)
+- **Backend**: Python + FastAPI
+- **AI Model**: Google Gemini API via Langchain
+- **Vector Database**: FAISS (local, no external services needed)
+- **Document Sources**: Official California tenant rights guides
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🚀 Quick Start
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Prerequisites
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- Node.js 18+ and npm
+- Python 3.9+
+- Google Gemini API key (free tier available)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 1. Clone and Install
+
+```bash
+# Install frontend dependencies
+npm install
+
+# Install backend dependencies
+cd backend
+pip install -r requirements.txt
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 2. Set Up API Key
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cd backend
+echo "GOOGLE_API_KEY=your_actual_key_here" > .env
 ```
+
+Get your API key at: https://makersuite.google.com/app/apikey
+
+### 3. Add Legal Documents
+
+Download the California Tenants Guide and place it in `backend/documents/`:
+- [2025 California Tenants Guide PDF](https://www.dre.ca.gov/publications/ResourceGuidebook/2025_Landlord_Tenant_Guide.pdf)
+
+### 4. Run the Application
+
+**Terminal 1 - Backend:**
+```bash
+cd backend
+python app.py
+# Server runs on http://localhost:8000
+```
+
+**Terminal 2 - Frontend:**
+```bash
+npm run dev
+# App runs on http://localhost:5173
+```
+
+## 📁 Project Structure
+
+```
+cowell-creative-project/
+├── src/                    # React frontend
+│   ├── App.tsx            # Main chat interface
+│   ├── components/        # React components
+│   └── ...
+├── backend/               # Python backend
+│   ├── app.py            # FastAPI server
+│   ├── utils/            # Langchain & RAG setup
+│   ├── documents/        # Legal documents (PDFs)
+│   └── requirements.txt  # Python dependencies
+└── README.md             # You are here
+```
+
+## 🔧 How It Works
+
+1. **User asks a question** in the React chat interface
+2. **Frontend sends** the question to the FastAPI backend
+3. **Backend retrieves** relevant sections from legal documents using vector search
+4. **Gemini AI** generates a response based on the retrieved context
+5. **Frontend displays** the answer in plain language
+
+## 🎓 Learning Resources
+
+This project demonstrates:
+- **Full-stack development** (React + Python)
+- **API integration** (REST APIs, HTTP requests)
+- **AI/ML concepts** (embeddings, vector search, RAG)
+- **Real-world application** of technology for social good
+
+## 📝 Development Roadmap
+
+- [x] Project setup and architecture
+- [x] Basic frontend chat interface
+- [x] FastAPI backend skeleton
+- [ ] Langchain + Gemini integration
+- [ ] RAG pipeline with FAISS
+- [ ] Document processing and indexing
+- [ ] Production deployment
+
+## ⚖️ Legal Disclaimer
+
+This tool provides general information about California tenant rights and should not be considered legal advice. For specific legal issues, consult a qualified attorney.
+
+## 📄 License
+
+MIT License - See LICENSE file for details
+
+---
+
+**Built for housing justice education** 🏠
