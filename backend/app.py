@@ -3,7 +3,7 @@ FastAPI backend for AI Tenant Rights Chatbot
 This server handles chat requests and uses Langchain + Gemini to answer tenant rights questions
 """
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
@@ -38,6 +38,19 @@ class ChatResponse(BaseModel):
 async def root():
     """Health check endpoint"""
     return {"status": "ok", "message": "Tenant Rights Chatbot API is running"}
+
+
+@app.options("/chat")
+async def chat_options():
+    """Handle CORS preflight for chat endpoint"""
+    return Response(
+        status_code=200,
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+            "Access-Control-Allow-Headers": "*",
+        }
+    )
 
 
 @app.post("/chat", response_model=ChatResponse)
