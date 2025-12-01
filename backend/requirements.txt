@@ -18,6 +18,9 @@ python-multipart==0.0.20
 # Environment Variables
 python-dotenv==1.0.1
 
+# Security & Auth (required by Google APIs)
+cryptography>=41.0.0
+
 # CORS for React frontend
 fastapi[standard]==0.115.0
 

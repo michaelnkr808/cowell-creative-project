@@ -9,21 +9,24 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 import os
 
+# Import our AI agent - using direct Google API to avoid model name issues
+from utils.direct_gemini import ask_tenant_question_direct as ask_tenant_question
+
 # Load environment variables from .env file
 load_dotenv()
 
 app = FastAPI(title="Tenant Rights Chatbot API")
 
 # Enable CORS so our React frontend can talk to this backend
+# Using wildcard for development - in production, specify exact origins
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Vite's default port
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=["*"],  # Allow all origins for development
+    allow_credentials=False,  # Must be False when allow_origins is "*"
+    allow_methods=["*"],  # Allow all methods
+    allow_headers=["*"],  # Allow all headers
 )
 
-# Define what data we expect from the frontend
 class ChatRequest(BaseModel):
     message: str
 
@@ -42,22 +45,37 @@ async def chat(request: ChatRequest):
     """
     Main chat endpoint - receives a question and returns an AI response
     
-    This is where we'll integrate Langchain + Gemini + RAG
-    For now, it's a simple echo to test the connection
+    Uses Google Gemini API directly to answer tenant rights questions
     """
     try:
-        # TODO: Add Langchain + Gemini integration here
-        # For now, just echo back
-        response_text = f"You asked: {request.message}. (AI integration coming next!)"
+        print(f"Received question: {request.message}")  # Debug log
+        
+        # Use our AI agent to answer the question
+        response_text = ask_tenant_question(request.message)
+        
+        print(f"Generated response: {response_text[:100]}...")  # Debug log
         
         return ChatResponse(response=response_text)
     
+    except ValueError as ve:
+        # Specific error for missing API key
+        print(f"ValueError: {ve}")  # Debug log
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Configuration error: {str(ve)}"
+        )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        # General error handling
+        print(f"Exception: {type(e).__name__}: {str(e)}")  # Debug log
+        import traceback
+        traceback.print_exc()  # Print full error trace
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Error processing request: {str(e)}"
+        )
 
 
 if __name__ == "__main__":
     import uvicorn
-    # Run the server on port 8000
     uvicorn.run(app, host="0.0.0.0", port=8000)
 
