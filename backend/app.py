@@ -18,13 +18,18 @@ load_dotenv()
 app = FastAPI(title="Tenant Rights Chatbot API")
 
 # Enable CORS so our React frontend can talk to this backend
-# Using wildcard for development - in production, specify exact origins
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins for development
-    allow_credentials=False,  # Must be False when allow_origins is "*"
-    allow_methods=["*"],  # Allow all methods
-    allow_headers=["*"],  # Allow all headers
+    allow_origins=[
+        "http://localhost:5173",              # Local development
+        "http://127.0.0.1:5173",              # Local development (alt)
+        "https://*.vercel.app",               # All Vercel deployments (preview + production)
+        # Add your custom domain here if you have one:
+        # "https://yourdomain.com",
+    ],
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["*"],
 )
 
 class ChatRequest(BaseModel):

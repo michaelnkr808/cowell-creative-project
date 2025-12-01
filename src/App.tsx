@@ -15,6 +15,9 @@ function App() {
   // State to track if we're waiting for a response
   const [isLoading, setIsLoading] = useState(false)
 
+  // Use environment variable for API URL (supports both local dev and production)
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+
   const sendMessage = async () => {
     if (!input.trim()) return // Don't send empty messages
 
@@ -25,8 +28,8 @@ function App() {
     setIsLoading(true)
 
     try {
-      // Call our Python backend
-      const response = await fetch('http://localhost:8000/chat', {
+      // Call our Python backend (works locally and in production)
+      const response = await fetch(`${API_URL}/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
