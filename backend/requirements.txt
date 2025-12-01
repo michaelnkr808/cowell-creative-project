@@ -1,26 +1,15 @@
+# Minimal dependencies for deployment
+# Only includes what we actually use
+
 # Web Framework
 fastapi==0.115.0
 uvicorn==0.32.0
 
-# AI & Langchain
-langchain==0.3.7
-langchain-google-genai==2.0.5
-langchain-community==0.3.7
-
-# Vector Store & Embeddings (not used yet - for future RAG implementation)
-# faiss-cpu==1.9.0.post1
-# sentence-transformers==3.3.1
-
-# Document Processing (not used yet - for future RAG implementation)
-# pypdf==5.1.0
-# python-multipart==0.0.20
-
 # Environment Variables
 python-dotenv==1.0.1
 
-# Security & Auth (required by Google APIs)
-cryptography>=41.0.0
-
-# Google Generative AI (for direct Gemini API access)
+# Google Generative AI (for Gemini API)
 google-generativeai>=0.8.0
 
+# Security (required by Google APIs)
+cryptography>=41.0.0
